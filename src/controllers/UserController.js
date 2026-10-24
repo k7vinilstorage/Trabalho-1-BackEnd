@@ -1,6 +1,6 @@
 import { Usuario } from '../models/Usuario.js';
 import { executar } from './executar.js';
-import { ErroAutenticacao } from '../utils/erros.js';
+import { ErroAutenticacao } from '../utils/errors.js';
 
 export class UsuarioController {
   static cadastrar(dados) {

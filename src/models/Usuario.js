@@ -18,7 +18,7 @@ async function executarNoBanco(descricao, funcao){
     try {
         return await funcao();
     } catch (erro) {
-        if(erro,code === 11000){
+        if(erro.code === 11000){
             throw new ErroConflito('Já existe um usuário com este e-mail');
         }
         throw new ErroBanco(`Falha ao ${descricao}: ${erro.message}`);
@@ -32,7 +32,7 @@ export class Usuario {
         this.senha = senha;
     }
 
-    validarNome(nome){
+    static validarNome(nome){
         if(typeof nome !== 'string' || nome.trim() === ''){
             throw new ErroValidacao('Campo "nome" obrigatório.');
         }
@@ -56,7 +56,7 @@ export class Usuario {
 
     static validarSenha(senha){
         if(typeof senha !== 'string' || senha === ''){
-            throw new ErroValidacao('E-mail em formato inválido.');
+            throw new ErroValidacao('Campo "senha" obrigatório.');
         }
         if (senha.length < 6){
             throw new ErroValidacao('A senha deve ter pelo menos 6 caracteres.');
@@ -64,7 +64,7 @@ export class Usuario {
         return senha;
     }
 
-    static validar() {
+    validar() {
         this.nome = Usuario.validarNome(this.nome);
         this.email = Usuario.validarEmail(this.email);
         this.senha = Usuario.validarSenha(this.senha);
@@ -93,7 +93,7 @@ export class Usuario {
         return this._id;
     }
 
-    async autenticar(email, senha) {
+    static async autenticar(email, senha) {
         if (typeof email !== 'string' || email.trim() === '' || typeof senha !== 'string' || senha === '') {
         throw new ErroValidacao('Informe e-mail e senha.');
         }
@@ -113,16 +113,16 @@ export class Usuario {
         return { _id: usuario._id, nome: usuario.nome, email: usuario.email };
     }
 
-    async buscarPorId(id){
+    static async buscarPorId(id){
         const _id = converteId(id);
         const usuario = await executarNoBanco('consultar usuario', () => colecao().findOne({ _id }, { projection: { senhaHash: 0, salt: 0 } }));
         if(!usuario) throw new ErroNaoencontrado('Usuário não encontrado');
         return usuario;
     }
 
-    async atualizar(id, dados = {}){
+    static async atualizar(id, dados = {}){
         const _id = converteId(id);
-        const campos = [];
+        const campos = {};
 
         if(dados.nome !== undefined) campos.nome = Usuario.validarNome(dados.nome);
         if(dados.email !== undefined) campos.email = Usuario.validarEmail(dados.email);
@@ -143,8 +143,8 @@ export class Usuario {
         }
     }
 
-    async excluir(id){
-        const _id = converterId(id);
+    static async excluir(id){
+        const _id = converteId(id);
 
         const existe = await executarNoBanco('consultar usuário', () =>
         colecao().findOne({ _id }, { projection: { _id: 1 } })
@@ -152,7 +152,7 @@ export class Usuario {
         if (!existe) throw new ErroNaoencontrado('Usuário não encontrado.');
 
         await executarNoBanco('excluir usuário', async () => {
-        const banco = obterBanco();
+        const banco = getBanco();
         await banco.collection('albuns').deleteMany({ usuarioId: _id });
         await banco.collection('fotos').deleteMany({ usuarioId: _id });
         await colecao().deleteOne({ _id });

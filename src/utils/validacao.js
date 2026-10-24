@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { ErroValidacao } from './errors,js';
+import { ErroValidacao } from './errors.js';
 
 export function converteId(id){
     const texto = String(id ?? '').trim();

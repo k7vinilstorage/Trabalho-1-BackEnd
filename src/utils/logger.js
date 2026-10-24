@@ -22,7 +22,7 @@ export async function registrarErro(operacao, erro) {
         `MENSAGEM: ${erro?.message ?? String(erro)}\n\n`;
 
     try {
-        await mkdir(PASTA_LOGS, {receive: true});
+        await mkdir(PASTA_LOGS, {recursive: true});
         await appendFile(ARQUIVO_LOG, registro, 'utf-8');
     } catch (erroAoGravar) {
         console.error('Não foi possível gravar no arquivo de log:', erroAoGravar.message);

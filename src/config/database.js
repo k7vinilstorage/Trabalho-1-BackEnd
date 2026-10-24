@@ -1,28 +1,31 @@
-const { MongoClient } = require('mongodb');
+import { MongoClient } from 'mongodb';
+import { ErroBanco } from '../utils/errors.js';
 
-const StringCon = {
+export const StringCon = {
   connection: 'mongodb://127.0.0.1:27017',
   dbName: 'web2_db'
 };
 
 const client = new MongoClient(StringCon.connection);
-let db = null;
+let banco = null;
 
-async function conectar() {
-  await client.connect();
-  db = client.db(StringCon.dbName);
+export async function conectar() {
+  try {
+    await client.connect();
+    banco = client.db(StringCon.dbName);
 
-  await db.collection('usuarios').createIndex({ email: 1 }, { unique: true });
+    await banco.collection('usuarios').createIndex({ email: 1 }, { unique: true });
+  } catch (erro) {
+    throw new ErroBanco(`Falha ao conectar ao banco: ${erro.message}`);
+  }
 
   console.log('conectado');
-  return db;
+  return banco;
 }
 
-function getDb() {
-  if (!db) {
-    throw new Error('banco não conectado');
+export function getBanco() {
+  if (!banco) {
+    throw new ErroBanco('Banco não conectado.');
   }
-  return db;
+  return banco;
 }
-
-module.exports = { StringCon, conectar, getDb };

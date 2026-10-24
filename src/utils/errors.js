@@ -1,32 +1,32 @@
-export class ErroValidacao extends Erros{
+export class ErroValidacao extends Error{
     constructor(message){
         super(message);
         this.name = 'ErroValidacao';
     }    
 }
 
-export class ErroNaoencontrado extends Erros{
+export class ErroNaoencontrado extends Error{
     constructor(message){
         super(message);
         this.name = "ErroNaoEncontrado";
     }    
 }
 
-export class ErroConflito extends Erros{
+export class ErroConflito extends Error{
     constructor(message){
         super(message);
         this.name = 'ErroConflito';
     }    
 }
 
-export class ErroAutenticacao extends Erros{
+export class ErroAutenticacao extends Error{
     constructor(message){
         super(message);
         this.name = 'ErroAutenticacao';
     }    
 }
 
-export class ErroBanco extends Erros{
+export class ErroBanco extends Error{
     constructor(message){
         super(message);
         this.name = 'ErroBanco';
