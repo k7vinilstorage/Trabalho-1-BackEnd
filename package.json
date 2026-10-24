@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/k7vinilstorage/Trabalho-1-BackEnd#readme",
   "dependencies": {
-    "express": "^5.3.0",
     "mongodb": "^7.7.0"
   }
 }

@@ -1,12 +1,10 @@
-import express from 'express';
+import { conectar } from './config/database.js';
+import { registrarErro } from './utils/logger.js';
 
-const app = express();
-const port = 3000;
-
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+try {
+  await conectar();
+} catch (erro) {
+  await registrarErro('Conectar ao banco', erro);
+  console.error(erro.message);
+  process.exitCode = 1;
+}
