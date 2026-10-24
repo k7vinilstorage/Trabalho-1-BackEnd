@@ -23,6 +23,11 @@ export async function conectar() {
   return banco;
 }
 
+export async function desconectar() {
+  await client.close();
+  banco = null;
+}
+
 export function getBanco() {
   if (!banco) {
     throw new ErroBanco('Banco não conectado.');
@@ -32,7 +37,7 @@ export function getBanco() {
 
 export async function executarNoBanco(descricao, funcao, mensagemConflito = 'Já existe um registro com estes dados'){
   try {
-    return await funcao;
+    return await funcao();
   } catch (erro) {
     if(erro.code === 11000){
       throw new ErroConflito(mensagemConflito);
