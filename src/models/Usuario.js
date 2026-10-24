@@ -1,8 +1,8 @@
 import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
 import { getBanco, executarNoBanco } from '../config/database.js';
-import { converteId } from '../utils/validacao.js';
-import { ErroAutenticacao, ErroBanco, ErroConflito, ErroValidacao, ErroNaoencontrado } from '../utils/errors.js';
+import { converterId } from '../utils/validacao.js';
+import { ErroAutenticacao, ErroValidacao, ErroNaoEncontrado } from '../utils/errors.js';
 
 const scryptAsync = promisify(scrypt);
 const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -103,14 +103,14 @@ export class Usuario {
     }
 
     static async buscarPorId(id){
-        const _id = converteId(id);
-        const usuario = await executarNoBanco('consultar usuario', () => colecao().findOne({ _id }, { projection: { senhaHash: 0, salt: 0 } }), 'Já existe um usuário cadastrado com este e-mail.');
-        if(!usuario) throw new ErroNaoencontrado('Usuário não encontrado');
+        const _id = converterId(id);
+        const usuario = await executarNoBanco('consultar usuário', () => colecao().findOne({ _id }, { projection: { senhaHash: 0, salt: 0 } }));
+        if(!usuario) throw new ErroNaoEncontrado('Usuário não encontrado.');
         return usuario;
     }
 
     static async atualizar(id, dados = {}){
-        const _id = converteId(id);
+        const _id = converterId(id);
         const campos = {};
 
         if(dados.nome !== undefined) campos.nome = Usuario.validarNome(dados.nome);
@@ -128,26 +128,23 @@ export class Usuario {
         const resultado = await executarNoBanco('atualizar usuário', () =>
         colecao().updateOne({ _id }, { $set: campos }), 'Já existe um usuário cadastrado com este e-mail.');
         if(resultado.matchedCount === 0){
-            throw new ErroNaoencontrado('Usuário não encontrado.');
+            throw new ErroNaoEncontrado('Usuário não encontrado.');
         }
     }
 
     static async excluir(id){
-        const _id = converteId(id);
+        const _id = converterId(id);
 
         const existe = await executarNoBanco('consultar usuário', () =>
-        colecao().findOne({ _id }, { projection: { _id: 1 } }), 'Já existe um usuário cadastrado com este e-mail.'
+        colecao().findOne({ _id }, { projection: { _id: 1 } })
         );
-        if (!existe) throw new ErroNaoencontrado('Usuário não encontrado.');
+        if (!existe) throw new ErroNaoEncontrado('Usuário não encontrado.');
 
         await executarNoBanco('excluir usuário', async () => {
         const banco = getBanco();
         await banco.collection('albuns').deleteMany({ usuarioId: _id });
         await banco.collection('fotos').deleteMany({ usuarioId: _id });
         await colecao().deleteOne({ _id });
-        }, 'Já existe um usuário cadastrado com este e-mail.');
+        });
     }
 }
-
-
-

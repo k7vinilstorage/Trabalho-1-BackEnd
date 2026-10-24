@@ -1,13 +1,16 @@
 import { ObjectId } from 'mongodb';
 import { ErroValidacao } from './errors.js';
 
-export function converteId(id){
+export function converterId(id){
     const texto = String(id ?? '').trim();
     if(!/^[0-9a-fA-F]{24}$/.test(texto)) {
         throw new ErroValidacao('ID inválido');
     }
     return new ObjectId(texto);
 }
+
+// Exporta alias sem 'r' para compatibilidade
+export { converterId as converteId };
 
 export function converterData(valor) {
   if (valor instanceof Date) {
@@ -26,7 +29,7 @@ export function converterData(valor) {
     mes = Number(partes[2]);
     ano = Number(partes[3]);
   } else {
-    partes = texto.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    partes = texto.match(/^(\d{4})-(\d{2})-(\d{2})(?:T.*)?$/);
     if (!partes) throw new ErroValidacao('Data inválida. Use o formato dd/mm/aaaa.');
     ano = Number(partes[1]);
     mes = Number(partes[2]);

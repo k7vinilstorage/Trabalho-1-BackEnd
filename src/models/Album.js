@@ -1,6 +1,6 @@
 import { getBanco, executarNoBanco } from '../config/database.js';
 import { converterId, preenchido, escaparRegex } from '../utils/validacao.js';
-import { ErroValidacao, ErroNaoEncontrado, ErroConflito } from '../utils/erros.js';
+import { ErroValidacao, ErroNaoEncontrado, ErroConflito } from '../utils/errors.js';
 
 const MSG_NOME_REPETIDO = 'Você já possui um álbum com este nome.';
 
@@ -36,7 +36,7 @@ export class Album {
     return limpo;
   }
 
- async inserir() {
+  async inserir() {
     const usuarioId = converterId(this.usuarioId);
     const documento = {
       usuarioId,
@@ -46,7 +46,7 @@ export class Album {
     };
 
     const dono = await executarNoBanco('consultar usuário', () =>
-      obterBanco().collection('usuarios').findOne({ _id: usuarioId }, { projection: { _id: 1 } })
+      getBanco().collection('usuarios').findOne({ _id: usuarioId }, { projection: { _id: 1 } })
     );
     if (!dono) throw new ErroNaoEncontrado('Usuário não encontrado.');
 
@@ -112,7 +112,7 @@ export class Album {
     if (!album) throw new ErroNaoEncontrado('Álbum não encontrado.');
 
     const foto = await executarNoBanco('consultar foto', () =>
-      obterBanco().collection('fotos').findOne({ _id: idFoto, usuarioId: dono }, { projection: { _id: 1 } })
+      getBanco().collection('fotos').findOne({ _id: idFoto, usuarioId: dono }, { projection: { _id: 1 } })
     );
     if (!foto) throw new ErroNaoEncontrado('Foto não encontrada.');
 

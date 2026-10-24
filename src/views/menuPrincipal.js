@@ -1,5 +1,7 @@
 import { perguntar, fecharEntrada } from './entrada.js';
 import { menuUsuario } from './menuUsuario.js';
+import { menuAlbum } from './menuAlbum.js';
+import { menuFoto } from './menuFoto.js';
 import { UsuarioController } from '../controllers/UserController.js';
 import { desconectar } from '../config/database.js';
 
@@ -56,10 +58,8 @@ async function menuLogado() {
   const opcao = await perguntar('Opção: ');
   switch (opcao) {
     case '1': await menuUsuario(); break;
-    case '2':
-    case '3':
-      console.log('Ainda não implementado.');
-      break;
+    case '2': await menuAlbum(); break;
+    case '3': await menuFoto(); break;
     case '4':
       UsuarioController.logout();
       console.log('Logout realizado.');

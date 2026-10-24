@@ -5,10 +5,10 @@ export class ErroValidacao extends Error{
     }    
 }
 
-export class ErroNaoencontrado extends Error{
+export class ErroNaoEncontrado extends Error{
     constructor(message){
         super(message);
-        this.name = "ErroNaoEncontrado";
+        this.name = 'ErroNaoEncontrado';
     }    
 }
 
@@ -32,3 +32,6 @@ export class ErroBanco extends Error{
         this.name = 'ErroBanco';
     }    
 }
+
+// Exporta alias com 'e' minúsculo para compatibilidade
+export { ErroNaoEncontrado as ErroNaoencontrado };

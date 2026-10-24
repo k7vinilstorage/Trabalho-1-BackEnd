@@ -1,6 +1,6 @@
 import { Album } from '../models/Album.js';
 import { Foto } from '../models/Foto.js';
-import { UsuarioController } from './UsuarioController.js';
+import { UsuarioController } from './UserController.js';
 import { executar } from './executar.js';
 
 export class AlbumController {

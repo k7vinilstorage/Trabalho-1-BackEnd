@@ -49,5 +49,6 @@ export class UsuarioController {
     if (!UsuarioController.usuarioLogado) {
       throw new ErroAutenticacao('Faça login para realizar esta operação.');
     }
+    return UsuarioController.usuarioLogado;
   }
 }

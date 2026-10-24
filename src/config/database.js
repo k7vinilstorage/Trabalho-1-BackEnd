@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { ErroConflito, ErroBanco } from '../utils/errors.js';
+import { ErroConflito, ErroBanco, ErroValidacao, ErroNaoEncontrado, ErroAutenticacao } from '../utils/errors.js';
 
 export const StringCon = {
   connection: 'mongodb://127.0.0.1:27017',
@@ -15,6 +15,7 @@ export async function conectar() {
     banco = client.db(StringCon.dbName);
 
     await banco.collection('usuarios').createIndex({ email: 1 }, { unique: true });
+    await banco.collection('albuns').createIndex({ usuarioId: 1, nome: 1 }, { unique: true });
   } catch (erro) {
     throw new ErroBanco(`Falha ao conectar ao banco: ${erro.message}`);
   }
@@ -35,11 +36,16 @@ export function getBanco() {
   return banco;
 }
 
+export const obterBanco = getBanco;
+
 export async function executarNoBanco(descricao, funcao, mensagemConflito = 'Já existe um registro com estes dados'){
   try {
     return await funcao();
   } catch (erro) {
-    if(erro.code === 11000){
+    if (erro instanceof ErroConflito || erro instanceof ErroValidacao || erro instanceof ErroNaoEncontrado || erro instanceof ErroAutenticacao) {
+      throw erro;
+    }
+    if (erro.code === 11000) {
       throw new ErroConflito(mensagemConflito);
     }
     throw new ErroBanco(`Falha ao ${descricao}: ${erro.message}`);
