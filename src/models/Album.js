@@ -1,11 +1,10 @@
-import { obterBanco } from '../config/database.js';
+import { getBanco, executarNoBanco } from '../config/database.js';
 import { converterId, preenchido, escaparRegex } from '../utils/validacao.js';
-import { executarNoBanco } from '../utils/banco.js';
 import { ErroValidacao, ErroNaoEncontrado, ErroConflito } from '../utils/erros.js';
 
 const MSG_NOME_REPETIDO = 'Você já possui um álbum com este nome.';
 
-const colecao = () => obterBanco().collection('albuns');
+const colecao = () => getBanco().collection('albuns');
 
 export class Album {
   constructor({ usuarioId, nome, descricao } = {}) {
