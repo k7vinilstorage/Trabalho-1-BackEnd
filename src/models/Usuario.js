@@ -1,6 +1,6 @@
 import { scrypt, randomBytes, timingSafeEqual } from 'node:crypto';
 import { promisify } from 'node:util';
-import { getBanco } from '../config/database.js';
+import { getBanco, executarNoBanco } from '../config/database.js';
 import { converteId } from '../utils/validacao.js';
 import { ErroAutenticacao, ErroBanco, ErroConflito, ErroValidacao, ErroNaoencontrado } from '../utils/errors.js';
 
@@ -12,17 +12,6 @@ const colecao = () => getBanco().collection('usuarios');
 async function gerarHash(senha, salt){
     const hash = await scryptAsync(senha, salt, 64);
     return hash.toString('hex');
-}
-
-async function executarNoBanco(descricao, funcao){
-    try {
-        return await funcao();
-    } catch (erro) {
-        if(erro.code === 11000){
-            throw new ErroConflito('Já existe um usuário com este e-mail');
-        }
-        throw new ErroBanco(`Falha ao ${descricao}: ${erro.message}`);
-    }
 }
 
 export class Usuario {
@@ -87,7 +76,7 @@ export class Usuario {
             dataCadastro: new Date(),
         };
 
-        const resultado = await executarNoBanco('inserir usuário', () => colecao().insertOne(documento));
+        const resultado = await executarNoBanco('inserir usuário', () => colecao().insertOne(documento), 'Já existe um usuário cadastrado com este e-mail.');
 
         this._id = resultado.insertedId;
         return this._id;
@@ -99,7 +88,7 @@ export class Usuario {
         }
 
         const usuario = await executarNoBanco('consultar usuário', () =>
-        colecao().findOne({ email: email.trim().toLowerCase() })
+        colecao().findOne({ email: email.trim().toLowerCase() }), 'Já existe um usuário cadastrado com este e-mail.'
         );
 
         const erroLogin = new ErroAutenticacao('E-mail ou senha incorretos.');
@@ -115,7 +104,7 @@ export class Usuario {
 
     static async buscarPorId(id){
         const _id = converteId(id);
-        const usuario = await executarNoBanco('consultar usuario', () => colecao().findOne({ _id }, { projection: { senhaHash: 0, salt: 0 } }));
+        const usuario = await executarNoBanco('consultar usuario', () => colecao().findOne({ _id }, { projection: { senhaHash: 0, salt: 0 } }), 'Já existe um usuário cadastrado com este e-mail.');
         if(!usuario) throw new ErroNaoencontrado('Usuário não encontrado');
         return usuario;
     }
@@ -137,7 +126,7 @@ export class Usuario {
         }
 
         const resultado = await executarNoBanco('atualizar usuário', () =>
-        colecao().updateOne({ _id }, { $set: campos }));
+        colecao().updateOne({ _id }, { $set: campos }), 'Já existe um usuário cadastrado com este e-mail.');
         if(resultado.matchedCount === 0){
             throw new ErroNaoencontrado('Usuário não encontrado.');
         }
@@ -147,7 +136,7 @@ export class Usuario {
         const _id = converteId(id);
 
         const existe = await executarNoBanco('consultar usuário', () =>
-        colecao().findOne({ _id }, { projection: { _id: 1 } })
+        colecao().findOne({ _id }, { projection: { _id: 1 } }), 'Já existe um usuário cadastrado com este e-mail.'
         );
         if (!existe) throw new ErroNaoencontrado('Usuário não encontrado.');
 
@@ -156,7 +145,7 @@ export class Usuario {
         await banco.collection('albuns').deleteMany({ usuarioId: _id });
         await banco.collection('fotos').deleteMany({ usuarioId: _id });
         await colecao().deleteOne({ _id });
-        });
+        }, 'Já existe um usuário cadastrado com este e-mail.');
     }
 }
 

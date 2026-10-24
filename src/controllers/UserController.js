@@ -23,14 +23,14 @@ export class UsuarioController {
 
   static consultarPerfil() {
     return executar('Consultar perfil', async () => {
-      UsuarioController.#exigirLogin();
+      UsuarioController.exigirLogin();
       return await Usuario.buscarPorId(UsuarioController.usuarioLogado._id);
     });
   }
 
   static atualizarPerfil(dados) {
     return executar('Atualizar usuário', async () => {
-      UsuarioController.#exigirLogin();
+      UsuarioController.exigirLogin();
       const id = UsuarioController.usuarioLogado._id;
       await Usuario.atualizar(id, dados);
       UsuarioController.usuarioLogado = await Usuario.buscarPorId(id);
@@ -39,13 +39,13 @@ export class UsuarioController {
 
   static excluirConta() {
     return executar('Excluir usuário', async () => {
-      UsuarioController.#exigirLogin();
+      UsuarioController.exigirLogin();
       await Usuario.excluir(UsuarioController.usuarioLogado._id);
       UsuarioController.usuarioLogado = null;
     });
   }
 
-  static #exigirLogin() {
+  static exigirLogin() {
     if (!UsuarioController.usuarioLogado) {
       throw new ErroAutenticacao('Faça login para realizar esta operação.');
     }

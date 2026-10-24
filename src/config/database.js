@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { ErroBanco } from '../utils/errors.js';
+import { ErroConflito, ErroBanco } from '../utils/errors.js';
 
 export const StringCon = {
   connection: 'mongodb://127.0.0.1:27017',
@@ -28,4 +28,15 @@ export function getBanco() {
     throw new ErroBanco('Banco não conectado.');
   }
   return banco;
+}
+
+export async function executarNoBanco(descricao, funcao, mensagemConflito = 'Já existe um registro com estes dados'){
+  try {
+    return await funcao;
+  } catch (erro) {
+    if(erro.code === 11000){
+      throw new ErroConflito(mensagemConflito);
+    }
+    throw new ErroBanco(`Falha ao ${descricao}: ${erro.message}`);
+  }
 }
