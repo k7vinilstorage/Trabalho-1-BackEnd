@@ -39,3 +39,8 @@ export function converterData(valor) {
   }
   return data;
 }
+
+export const preenchido = (valor) =>
+  valor !== undefined && valor !== null && String(valor).trim() !== '';
+
+export const escaparRegex = (texto) => texto.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
