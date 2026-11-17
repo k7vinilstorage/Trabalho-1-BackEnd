@@ -1,0 +1,57 @@
+<section class="cartao cartao-estreito">
+  <div class="cabecalho-secao">
+    <h1>{{titulo}}</h1>
+    <a href="/fotos" class="btn btn-limpar">Voltar</a>
+  </div>
+
+  {{#if editando}}
+    <p class="meta-id"><strong>ID:</strong> <code>{{foto._id}}</code></p>
+    <p class="dica">Campos deixados em branco mantêm o valor atual.</p>
+  {{/if}}
+
+  <form action="{{acao}}" method="POST" class="formulario">
+    <div class="campo">
+      <label for="nome">Nome da foto</label>
+      <input type="text" id="nome" name="nome" value="{{foto.nome}}" {{#unless editando}}required{{/unless}} placeholder="Ex: Pôr do sol na praia">
+    </div>
+
+    <div class="campo">
+      <label for="descricao">Descrição (opcional)</label>
+      <textarea id="descricao" name="descricao" rows="3" placeholder="Descrição da foto">{{foto.descricao}}</textarea>
+    </div>
+
+    <div class="grade-dupla">
+      <div class="campo">
+        <label for="data">Data (dd/mm/aaaa)</label>
+        <input type="text" id="data" name="data" value="{{formatarData foto.data}}" placeholder="{{#unless editando}}Deixe vazio para hoje{{else}}dd/mm/aaaa{{/unless}}">
+      </div>
+
+      <div class="campo">
+        <label for="formato">Formato (jpg, jpeg, png, gif, webp, bmp, heic)</label>
+        <input type="text" id="formato" name="formato" value="{{foto.formato}}" placeholder="Ex: jpg">
+      </div>
+    </div>
+
+    <div class="grade-dupla">
+      <div class="campo">
+        <label for="tamanhoKB">Tamanho em KB (opcional)</label>
+        <input type="text" id="tamanhoKB" name="tamanhoKB" value="{{foto.tamanhoKB}}" placeholder="Ex: 1024 ou 250,5">
+      </div>
+
+      <div class="campo">
+        <label for="local">Local (opcional)</label>
+        <input type="text" id="local" name="local" value="{{foto.local}}" placeholder="Ex: Florianópolis - SC">
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="tags">Tags (separadas por vírgula, opcional)</label>
+      <input type="text" id="tags" name="tags" value="{{juntarTags foto.tags}}" placeholder="Ex: natureza, praia, ferias">
+    </div>
+
+    <div class="acoes">
+      <button type="submit" class="btn btn-primario">{{#if editando}}Salvar Alterações{{else}}Cadastrar Foto{{/if}}</button>
+      <a href="/fotos" class="btn btn-limpar">Cancelar</a>
+    </div>
+  </form>
+</section>

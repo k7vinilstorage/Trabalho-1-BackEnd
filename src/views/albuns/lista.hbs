@@ -1,0 +1,66 @@
+<section class="cartao">
+  <div class="cabecalho-secao">
+    <h1>Meus Álbuns</h1>
+  </div>
+
+  <form action="/albuns" method="GET" class="formulario-filtro">
+    <div class="campo-inline">
+      <label for="filtro-nome">Buscar álbum por nome</label>
+      <input type="text" id="filtro-nome" name="nome" value="{{filtroNome}}" placeholder="Nome parcial do álbum">
+    </div>
+    <button type="submit" class="btn btn-secundario">Filtrar (GET)</button>
+    {{#if filtroNome}}
+      <a href="/albuns" class="btn btn-limpar">Limpar</a>
+    {{/if}}
+  </form>
+</section>
+
+<section class="cartao">
+  <h2>Criar Novo Álbum</h2>
+  <form action="/albuns" method="POST" class="formulario">
+    <div class="grade-dupla">
+      <div class="campo">
+        <label for="nome">Nome do álbum</label>
+        <input type="text" id="nome" name="nome" required placeholder="Ex: Viagem 2026">
+      </div>
+
+      <div class="campo">
+        <label for="descricao">Descrição (opcional)</label>
+        <input type="text" id="descricao" name="descricao" placeholder="Descrição do álbum">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primario">Criar Álbum</button>
+  </form>
+</section>
+
+<section class="cartao">
+  <h2>Álbuns Encontrados ({{contar albuns}})</h2>
+
+  {{#if albuns.length}}
+    <div class="grade-cards">
+      {{#each albuns}}
+        <article class="card-item">
+          <h3>{{nome}}</h3>
+          <p class="meta-id"><strong>ID:</strong> <code>{{_id}}</code></p>
+          {{#if descricao}}
+            <p class="descricao">{{descricao}}</p>
+          {{else}}
+            <p class="descricao sem-texto">(sem descrição)</p>
+          {{/if}}
+          <p><strong>Quantidade de fotos:</strong> {{contar fotoIds}}</p>
+
+          <div class="acoes-card">
+            <a href="/albuns/{{_id}}" class="btn btn-primario">Ver Detalhes</a>
+            <a href="/albuns/{{_id}}/editar" class="btn btn-secundario">Editar</a>
+            <form action="/albuns/{{_id}}/excluir" method="POST" class="form-inline" onsubmit="return confirm('Tem certeza que deseja excluir este álbum?');">
+              <button type="submit" class="btn btn-perigo">Excluir</button>
+            </form>
+          </div>
+        </article>
+      {{/each}}
+    </div>
+  {{else}}
+    <p class="vazio">Nenhum álbum encontrado.</p>
+  {{/if}}
+</section>

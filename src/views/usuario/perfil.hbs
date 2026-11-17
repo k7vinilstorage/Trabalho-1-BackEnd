@@ -1,0 +1,40 @@
+<section class="cartao">
+  <h1>Minha Conta</h1>
+  <div class="detalhes-lista">
+    <p><strong>ID:</strong> <code>{{usuario._id}}</code></p>
+    <p><strong>Nome:</strong> {{usuario.nome}}</p>
+    <p><strong>E-mail:</strong> {{usuario.email}}</p>
+    <p><strong>Cadastrado em:</strong> {{formatarDataHora usuario.dataCadastro}}</p>
+  </div>
+</section>
+
+<section class="cartao">
+  <h2>Atualizar Dados</h2>
+  <p class="dica">Deixe em branco para manter o valor atual.</p>
+  <form action="/conta/atualizar" method="POST" class="formulario">
+    <div class="campo">
+      <label for="nome">Novo nome</label>
+      <input type="text" id="nome" name="nome" placeholder="Manter nome atual">
+    </div>
+
+    <div class="campo">
+      <label for="email">Novo e-mail</label>
+      <input type="email" id="email" name="email" placeholder="Manter e-mail atual">
+    </div>
+
+    <div class="campo">
+      <label for="senha">Nova senha</label>
+      <input type="password" id="senha" name="senha" placeholder="Manter senha atual (mínimo 6 caracteres)">
+    </div>
+
+    <button type="submit" class="btn btn-primario">Salvar Alterações</button>
+  </form>
+</section>
+
+<section class="cartao cartao-perigo">
+  <h2>Excluir Conta</h2>
+  <p>Atenção: todos os seus álbuns e fotos também serão removidos permanentemente.</p>
+  <form action="/conta/excluir" method="POST" onsubmit="return confirm('Tem certeza? Seus álbuns e fotos também serão apagados.');">
+    <button type="submit" class="btn btn-perigo">Excluir Minha Conta</button>
+  </form>
+</section>

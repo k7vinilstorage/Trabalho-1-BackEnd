@@ -1,0 +1,24 @@
+<section class="cartao cartao-estreito">
+  <div class="cabecalho-secao">
+    <h1>Editar Álbum</h1>
+    <a href="/albuns/{{album._id}}" class="btn btn-limpar">Voltar</a>
+  </div>
+  <p class="meta-id"><strong>ID:</strong> <code>{{album._id}}</code></p>
+
+  <form action="/albuns/{{album._id}}/atualizar" method="POST" class="formulario">
+    <div class="campo">
+      <label for="nome">Nome do álbum</label>
+      <input type="text" id="nome" name="nome" value="{{album.nome}}">
+    </div>
+
+    <div class="campo">
+      <label for="descricao">Descrição</label>
+      <textarea id="descricao" name="descricao" rows="3">{{album.descricao}}</textarea>
+    </div>
+
+    <div class="acoes">
+      <button type="submit" class="btn btn-primario">Salvar Alterações</button>
+      <a href="/albuns/{{album._id}}" class="btn btn-limpar">Cancelar</a>
+    </div>
+  </form>
+</section>

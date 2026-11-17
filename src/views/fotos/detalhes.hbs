@@ -1,0 +1,33 @@
+<section class="cartao cartao-estreito">
+  <div class="cabecalho-secao">
+    <h1>{{foto.nome}}</h1>
+    <a href="/fotos" class="btn btn-limpar">Voltar para Fotos</a>
+  </div>
+
+  <div class="detalhes-lista">
+    <p><strong>ID:</strong> <code>{{foto._id}}</code></p>
+    <p><strong>Nome:</strong> {{foto.nome}}</p>
+    <p><strong>Descrição:</strong> {{#if foto.descricao}}{{foto.descricao}}{{else}}(sem descrição){{/if}}</p>
+    <p><strong>Data:</strong> {{formatarData foto.data}}</p>
+    <p>
+      <strong>Tags:</strong>
+      {{#if foto.tags.length}}
+        {{#each foto.tags}}
+          <span class="tag">{{this}}</span>
+        {{/each}}
+      {{else}}
+        (sem tags)
+      {{/if}}
+    </p>
+    <p><strong>Formato:</strong> {{#if foto.formato}}{{foto.formato}}{{else}}(não informado){{/if}}</p>
+    <p><strong>Tamanho:</strong> {{#if foto.tamanhoKB}}{{foto.tamanhoKB}} KB{{else}}(não informado){{/if}}</p>
+    <p><strong>Local:</strong> {{#if foto.local}}{{foto.local}}{{else}}(não informado){{/if}}</p>
+  </div>
+
+  <div class="acoes-card">
+    <a href="/fotos/{{foto._id}}/editar" class="btn btn-secundario">Editar Foto</a>
+    <form action="/fotos/{{foto._id}}/excluir" method="POST" class="form-inline" onsubmit="return confirm('Tem certeza que deseja excluir esta foto?');">
+      <button type="submit" class="btn btn-perigo">Excluir Foto</button>
+    </form>
+  </div>
+</section>

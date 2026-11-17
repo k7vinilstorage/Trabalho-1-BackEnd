@@ -1,0 +1,24 @@
+<section class="cartao cartao-estreito">
+  <h1>Cadastrar Conta</h1>
+  <form action="/cadastro" method="POST" class="formulario">
+    <div class="campo">
+      <label for="nome">Nome</label>
+      <input type="text" id="nome" name="nome" value="{{valores.nome}}" required placeholder="Mínimo 2 caracteres">
+    </div>
+
+    <div class="campo">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" value="{{valores.email}}" required placeholder="seu@email.com">
+    </div>
+
+    <div class="campo">
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" name="senha" required placeholder="Mínimo 6 caracteres">
+    </div>
+
+    <div class="acoes">
+      <button type="submit" class="btn btn-primario">Cadastrar</button>
+      <a href="/login" class="link-secundario">Já possui conta? Faça login</a>
+    </div>
+  </form>
+</section>

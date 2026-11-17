@@ -1,0 +1,96 @@
+<section class="cartao">
+  <div class="cabecalho-secao">
+    <h1>Minhas Fotos</h1>
+    <a href="/fotos/nova" class="btn btn-primario">+ Cadastrar Foto</a>
+  </div>
+
+  <form action="/fotos" method="GET" class="formulario">
+    <div class="grade-filtros">
+      <div class="campo">
+        <label for="nome">Nome parcial</label>
+        <input type="text" id="nome" name="nome" value="{{filtros.nome}}" placeholder="Ex: praia">
+      </div>
+
+      <div class="campo">
+        <label for="tag">Tag</label>
+        <input type="text" id="tag" name="tag" value="{{filtros.tag}}" placeholder="Ex: ferias">
+      </div>
+
+      <div class="campo">
+        <label for="formato">Formato</label>
+        <input type="text" id="formato" name="formato" value="{{filtros.formato}}" placeholder="jpg, png, webp...">
+      </div>
+
+      <div class="campo">
+        <label for="dataInicial">Data inicial (dd/mm/aaaa)</label>
+        <input type="text" id="dataInicial" name="dataInicial" value="{{filtros.dataInicial}}" placeholder="01/01/2026">
+      </div>
+
+      <div class="campo">
+        <label for="dataFinal">Data final (dd/mm/aaaa)</label>
+        <input type="text" id="dataFinal" name="dataFinal" value="{{filtros.dataFinal}}" placeholder="31/12/2026">
+      </div>
+
+      <div class="campo">
+        <label for="albumId">Álbum</label>
+        <select id="albumId" name="albumId">
+          <option value="">Todos os álbuns</option>
+          {{#each albuns}}
+            <option value="{{_id}}" {{#if (igual _id ../filtros.albumId)}}selected{{/if}}>{{nome}} (ID: {{_id}})</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+
+    <div class="acoes">
+      <button type="submit" class="btn btn-secundario">Buscar Fotos (GET)</button>
+      <a href="/fotos" class="btn btn-limpar">Limpar Filtros</a>
+    </div>
+  </form>
+</section>
+
+<section class="cartao">
+  <h2>Fotos Encontradas ({{contar fotos}})</h2>
+
+  {{#if fotos.length}}
+    <div class="grade-cards">
+      {{#each fotos}}
+        <article class="card-item">
+          <h3>{{nome}}</h3>
+          <p class="meta-id"><strong>ID:</strong> <code>{{_id}}</code></p>
+          {{#if descricao}}
+            <p class="descricao">{{descricao}}</p>
+          {{/if}}
+          <p><strong>Data:</strong> {{formatarData data}}</p>
+          {{#if tags.length}}
+            <p class="tags-linha">
+              <strong>Tags:</strong>
+              {{#each tags}}
+                <span class="tag">{{this}}</span>
+              {{/each}}
+            </p>
+          {{/if}}
+          {{#if formato}}
+            <p><strong>Formato:</strong> {{formato}}</p>
+          {{/if}}
+          {{#if tamanhoKB}}
+            <p><strong>Tamanho:</strong> {{tamanhoKB}} KB</p>
+          {{/if}}
+          {{#if local}}
+            <p><strong>Local:</strong> {{local}}</p>
+          {{/if}}
+
+          <div class="acoes-card">
+            <a href="/fotos/{{_id}}" class="btn btn-primario">Ver</a>
+            <a href="/fotos/{{_id}}/editar" class="btn btn-secundario">Editar</a>
+            <form action="/fotos/{{_id}}/excluir" method="POST" class="form-inline" onsubmit="return confirm('Tem certeza que deseja excluir esta foto?');">
+              <button type="submit" class="btn btn-perigo">Excluir</button>
+            </form>
+          </div>
+        </article>
+      {{/each}}
+    </div>
+  {{else}}
+    <p class="vazio">Nenhuma foto encontrada.</p>
+  {{/if}}
+</section>

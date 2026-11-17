@@ -1,6 +1,8 @@
+import { app } from '../app.js';
 import { conectar } from './config/database.js';
 import { registrarErro } from './utils/logger.js';
-import { menuPrincipal } from './views/menuPrincipal.js';
+
+const PORTA = process.env.PORT || 3000;
 
 try {
   await conectar();
@@ -10,4 +12,6 @@ try {
   process.exit(1);
 }
 
-await menuPrincipal();
+app.listen(PORTA, () => {
+  console.log(`Servidor rodando em http://localhost:${PORTA}`);
+});

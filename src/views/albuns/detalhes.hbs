@@ -1,0 +1,75 @@
+<section class="cartao">
+  <div class="cabecalho-secao">
+    <div>
+      <h1>Álbum: {{album.nome}}</h1>
+      <p class="meta-id"><strong>ID:</strong> <code>{{album._id}}</code></p>
+    </div>
+    <div class="acoes-cabecalho">
+      <a href="/albuns/{{album._id}}/editar" class="btn btn-secundario">Editar Álbum</a>
+      <a href="/albuns" class="btn btn-limpar">Voltar para Álbuns</a>
+    </div>
+  </div>
+
+  <p><strong>Descrição:</strong> {{#if album.descricao}}{{album.descricao}}{{else}}(sem descrição){{/if}}</p>
+  <p><strong>Total de fotos:</strong> {{contar album.fotoIds}}</p>
+</section>
+
+<section class="cartao">
+  <h2>Adicionar Foto ao Álbum</h2>
+  {{#if fotosDisponiveis.length}}
+    <form action="/albuns/{{album._id}}/adicionar-foto" method="POST" class="formulario-filtro">
+      <div class="campo-inline">
+        <label for="fotoId">Selecione uma foto disponível</label>
+        <select id="fotoId" name="fotoId" required>
+          <option value="">-- Escolha uma foto --</option>
+          {{#each fotosDisponiveis}}
+            <option value="{{_id}}">{{nome}} (ID: {{_id}})</option>
+          {{/each}}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primario">Adicionar Foto</button>
+    </form>
+  {{else}}
+    <p class="vazio">Todas as suas fotos já estão neste álbum ou nenhuma foto foi cadastrada ainda. <a href="/fotos/nova">Cadastrar nova foto</a>.</p>
+  {{/if}}
+
+  <details class="detalhes-manual">
+    <summary>Ou informar ID da foto manualmente</summary>
+    <form action="/albuns/{{album._id}}/adicionar-foto" method="POST" class="formulario-filtro">
+      <div class="campo-inline">
+        <label for="fotoIdManual">ID da foto</label>
+        <input type="text" id="fotoIdManual" name="fotoId" placeholder="ObjectId de 24 caracteres">
+      </div>
+      <button type="submit" class="btn btn-secundario">Adicionar por ID</button>
+    </form>
+  </details>
+</section>
+
+<section class="cartao">
+  <h2>Fotos no Álbum ({{contar fotosNoAlbum}})</h2>
+
+  {{#if fotosNoAlbum.length}}
+    <div class="grade-cards">
+      {{#each fotosNoAlbum}}
+        <article class="card-item">
+          <h3>{{nome}}</h3>
+          <p class="meta-id"><strong>ID:</strong> <code>{{_id}}</code></p>
+          <p><strong>Data:</strong> {{formatarData data}}</p>
+          {{#if formato}}
+            <p><strong>Formato:</strong> {{formato}}</p>
+          {{/if}}
+
+          <div class="acoes-card">
+            <a href="/fotos/{{_id}}" class="btn btn-primario">Ver Foto</a>
+            <form action="/albuns/{{../album._id}}/remover-foto" method="POST" class="form-inline">
+              <input type="hidden" name="fotoId" value="{{_id}}">
+              <button type="submit" class="btn btn-perigo">Remover do Álbum</button>
+            </form>
+          </div>
+        </article>
+      {{/each}}
+    </div>
+  {{else}}
+    <p class="vazio">Este álbum ainda não possui fotos.</p>
+  {{/if}}
+</section>

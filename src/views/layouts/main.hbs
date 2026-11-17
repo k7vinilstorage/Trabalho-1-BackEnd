@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{#if titulo}}{{titulo}} — {{/if}}Armazenamento de Fotos</title>
+  <link rel="stylesheet" href="/css/estilo.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="container topo-conteudo">
+      <a href="/" class="marca">Armazenamento de Fotos</a>
+      <nav class="navegacao">
+        {{#if usuarioLogado}}
+          <span class="usuario-badge">Olá, {{usuarioLogado.nome}}</span>
+          <a href="/albuns">Álbuns</a>
+          <a href="/fotos">Fotos</a>
+          <a href="/conta">Minha Conta</a>
+          <form action="/logout" method="POST" class="form-inline">
+            <button type="submit" class="btn btn-secundario">Logout</button>
+          </form>
+        {{else}}
+          <a href="/login">Login</a>
+          <a href="/cadastro">Cadastrar</a>
+        {{/if}}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container conteudo">
+    {{#if mensagemSucesso}}
+      <div class="alerta alerta-sucesso">{{mensagemSucesso}}</div>
+    {{/if}}
+    {{#if mensagemErro}}
+      <div class="alerta alerta-erro">{{mensagemErro}}</div>
+    {{/if}}
+    {{#if erro}}
+      <div class="alerta alerta-erro">{{erro}}</div>
+    {{/if}}
+
+    {{{body}}}
+  </main>
+</body>
+</html>
